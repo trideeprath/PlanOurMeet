@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">PlanOurMeet</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+	<string name="phone_verification">Plan our meet will send an sms on this number for verification. </string>
+	<string name="phone_verification2"> Please confirm your country code and your phone number</string>
+	<string name="country">Your Country</string>
+	<string name="country_code_phone_number">Country code and phone number</string>
+	<string name="country_india">India</string>
+	<string name="country_brazil">Brazil</string>
+	<string name="country_code_india">+91</string>
+	<string name="country_code_brazil">+55</string>
+</resources>
