@@ -42,8 +42,7 @@ public class WelcomeScreen extends Activity{
             	countryName = getCountryCode.GetCountryName();
             	index = getCountryCode.GetIndex();
             	
-            	
-            	
+         
             	Log.d("zip", countryZipCode);
             	Log.d("id" , countryID);
             	Log.d("countryname",countryName);
