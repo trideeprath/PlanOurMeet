@@ -1,7 +1,5 @@
 package com.planourmeet.android.activity;
 
-import java.util.Locale;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,12 +8,14 @@ import android.util.Log;
 
 import com.planourmeet.android.R;
 import com.planourmeet.android.helper.GetCountryCode;
+import com.planourmeet.android.helper.GetPhoneNumber;
 
 public class WelcomeScreen extends Activity{
 	
 	// Splash screen timer
     private static int SPLASH_TIME_OUT = 2000;
     GetCountryCode getCountryCode = null;
+    GetPhoneNumber getPhoneNumber = null;
     String countryID = null;
     String countryZipCode =null;
     String countryName = null;
@@ -42,7 +42,7 @@ public class WelcomeScreen extends Activity{
             	countryName = getCountryCode.GetCountryName();
             	index = getCountryCode.GetIndex();
             	
-         
+                
             	Log.d("zip", countryZipCode);
             	Log.d("id" , countryID);
             	Log.d("countryname",countryName);
@@ -52,11 +52,14 @@ public class WelcomeScreen extends Activity{
             	//Locale l = new Locale("", "FM");
             	//String countryName = l.getDisplayCountry();
    
-                Intent i = new Intent(WelcomeScreen.this, MainActivity.class);
+            	getPhoneNumber = new GetPhoneNumber(WelcomeScreen.this);
+            	String phoneNumber = getPhoneNumber.getNumber();
+            	
+                Intent i = new Intent(WelcomeScreen.this, VerifyPhoneNumber.class);
                 i.putExtra("zipCode",countryZipCode);
                 i.putExtra("countryID", countryID);
                 i.putExtra("index", index);
-                
+                i.putExtra("phoneNumber", phoneNumber);
                 startActivity(i);
  
                 // close this activity

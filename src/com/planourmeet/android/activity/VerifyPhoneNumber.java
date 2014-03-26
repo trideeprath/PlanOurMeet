@@ -18,25 +18,35 @@ import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.planourmeet.android.R;
+import com.planourmeet.android.helper.GenerateRandomPin;
+import com.planourmeet.android.helper.GetPhoneNumber;
 import com.planourmeet.android.helper.NetworkAvailable;
 import com.planourmeet.android.helper.SendData;
 
-public class MainActivity extends Activity {
+public class VerifyPhoneNumber extends Activity {
 
 	public String phoneNo = null;
 	protected static final int SUB_ACTIVITY_REQUEST_CODE = 100;
 	public Spinner countryListSpinner =null;
     public Spinner countryZipCodeSpinner= null;
+    public GenerateRandomPin gp = null;
+    public GetPhoneNumber getPhoneNumber= null;
+    public TextView incorrectPhoneNumber = null;
     
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.verify_phone_number);
         String zipCode= getIntent().getStringExtra("zipCode");
         String countryID = getIntent().getStringExtra("countryID");
+        String phoneNumber = getIntent().getStringExtra("phoneNumber");
+        if(phoneNumber!=null){
+        	Log.d("get phoneNumber", phoneNumber);
+        }
         int index = getIntent().getIntExtra("index", 0);
         
         countryListSpinner = (Spinner) findViewById(R.id.CountryList);
@@ -47,23 +57,45 @@ public class MainActivity extends Activity {
         
         Toast.makeText(getApplicationContext(),zipCode+"  "+countryID, Toast.LENGTH_SHORT).show(); 
        
+        EditText phoneNumberEditText = (EditText) findViewById(R.id.PhoneNumber);
+        if(phoneNumber!=null){
+        	phoneNumberEditText.setText(phoneNumber);
+        }
         Button ok = (Button) findViewById(R.id.RegistrationOk);
         ok.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+            	gp = new GenerateRandomPin();
+                String Pin = gp.generateRandomPin();
             	EditText phoneNumber = (EditText) findViewById(R.id.PhoneNumber);
             	phoneNo = phoneNumber.getText().toString();
+            	
+            	getPhoneNumber = new GetPhoneNumber(VerifyPhoneNumber.this);
+            	boolean isPhoneNumberValid = getPhoneNumber.phoneNumberValidate(phoneNo);
+            	
             	//Toast.makeText(getApplicationContext(), phoneNo, Toast.LENGTH_SHORT).show();
             	 List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
                  //nameValuePairs.add(new BasicNameValuePair("PhoneNumber", phoneNo));
                  //nameValuePairs.add(new BasicNameValuePair("Pin","1234"));
                  nameValuePairs.add(new BasicNameValuePair("phn", phoneNo));
-                 nameValuePairs.add(new BasicNameValuePair("msg","1234"));
+                 nameValuePairs.add(new BasicNameValuePair("msg",Pin));                
+                 
+                 Log.d("valid",String.valueOf(isPhoneNumberValid));
+                 
                  if(new NetworkAvailable(getApplicationContext()).haveNetworkConnection()){
-                 	 AsyncTask<List<NameValuePair>, Void, String> Response = new SendData().execute(nameValuePairs);
-                 	
-                 	 //System.out.println(Response.toString());
-                 	
-                	 Toast.makeText(getApplicationContext(), "available", Toast.LENGTH_SHORT).show();
+                	 if(isPhoneNumberValid){
+                		 AsyncTask<List<NameValuePair>, Void, String> Response = new SendData().execute(nameValuePairs);
+                		 Toast.makeText(getApplicationContext(), "available", Toast.LENGTH_SHORT).show();
+                	 }
+                	 else{
+                		 incorrectPhoneNumber = (TextView) findViewById(R.id.IncorrectPhoneNumber);
+                		 /*
+                		 phoneNumber.setText(null);
+                		 phoneNumber.setHint("Number should be 10 digit");
+                		 */
+                		 incorrectPhoneNumber.setVisibility(1);
+                		 
+                	 }
+                	 
                  }
                  else{
                 	 Toast.makeText(getApplicationContext(), "not available", Toast.LENGTH_SHORT).show();
@@ -77,22 +109,16 @@ public class MainActivity extends Activity {
 			public boolean onTouch(View v, MotionEvent event) {
 				//Toast.makeText(getApplicationContext(), "hello", Toast.LENGTH_SHORT).show();
 				if (event.getAction() == MotionEvent.ACTION_UP) {
-					Intent i = new Intent(MainActivity.this, SelectCountry.class);
+					Intent i = new Intent(VerifyPhoneNumber.this, SelectCountry.class);
 					startActivityForResult(i, SUB_ACTIVITY_REQUEST_CODE);
 				}	
 				
 				return true;
 			}
 		});
-        
-        
-        
-       
+                   
     }
 	
-	
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

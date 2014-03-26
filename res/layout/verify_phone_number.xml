@@ -8,7 +8,7 @@
     <LinearLayout android:layout_width="fill_parent"
         android:orientation="vertical"
         android:layout_height="wrap_content">
-	
+
  
     <TextView android:id="@+id/TextViewTitle"
 	    android:layout_width="wrap_content"
@@ -17,9 +17,9 @@
 	    android:textSize="7pt"
 	    android:padding="15dp">
 	</TextView>
-	
+
     
-	
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -84,13 +84,13 @@
 			    android:layout_width="wrap_content"
 			    android:entries="@array/countryZipCode"
 			    android:layout_weight="1"/>
-	        
+
 	       <EditText android:id="@+id/PhoneNumber"
 			    android:layout_height="wrap_content"
 			    android:layout_width="wrap_content"
 			    android:inputType="phone"
 			    android:layout_weight="12"/>
-	        
+
 	        <Button
 		     	android:text="OK"
 		        android:id="@+id/RegistrationOk"
@@ -101,6 +101,17 @@
 		        android:layout_weight="1"/>
 
         </LinearLayout>
+        
+        <TextView android:id="@+id/IncorrectPhoneNumber"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:text="@string/incorrectPhoneNumber"
+		    android:textSize="5pt"
+		    android:paddingLeft="15dp"
+		    android:paddingRight="15dp"
+		    android:layout_marginTop="15dp"
+		    android:textColor="#ff0000"
+		    android:visibility="invisible"/>
         
     
     
