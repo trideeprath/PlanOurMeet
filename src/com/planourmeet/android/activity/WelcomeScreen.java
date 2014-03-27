@@ -2,13 +2,18 @@ package com.planourmeet.android.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.planourmeet.android.R;
 import com.planourmeet.android.helper.GetCountryCode;
 import com.planourmeet.android.helper.GetPhoneNumber;
+import com.planourmeet.android.helper.PhoneType;
 
 public class WelcomeScreen extends Activity{
 	
@@ -16,15 +21,33 @@ public class WelcomeScreen extends Activity{
     private static int SPLASH_TIME_OUT = 2000;
     GetCountryCode getCountryCode = null;
     GetPhoneNumber getPhoneNumber = null;
+    Editor edit = null;
+    TelephonyManager tm = null;
+    SharedPreferences sp = null;
     String countryID = null;
     String countryZipCode =null;
     String countryName = null;
     int index = 0;
+    String phoneType = null;
+    
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.welcome_screen);
+        //get wether the android device has phone functionality or not 
+        boolean isPhone = new PhoneType(this).getPhoneType();
+        
+        if(isPhone){
+        	sp= PreferenceManager.getDefaultSharedPreferences(this);
+        	edit = sp.edit();
+        	edit.putBoolean("isPhone",true);
+        }
+        else{
+        	edit.putBoolean("isPhone", false);
+        }
+        edit.commit();
+        
         
  
         new Handler().postDelayed(new Runnable() {
@@ -67,6 +90,8 @@ public class WelcomeScreen extends Activity{
             }
         }, SPLASH_TIME_OUT);
     }
+
+	
 
 }
 

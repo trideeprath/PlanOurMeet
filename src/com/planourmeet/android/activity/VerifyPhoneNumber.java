@@ -8,8 +8,10 @@ import org.apache.http.message.BasicNameValuePair;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MotionEvent;
@@ -36,6 +38,7 @@ public class VerifyPhoneNumber extends Activity {
     public GenerateRandomPin gp = null;
     public GetPhoneNumber getPhoneNumber= null;
     public TextView incorrectPhoneNumber = null;
+    public SharedPreferences sp = null;
     
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +50,11 @@ public class VerifyPhoneNumber extends Activity {
         if(phoneNumber!=null){
         	Log.d("get phoneNumber", phoneNumber);
         }
+        
+        sp = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean isPhone = sp.getBoolean("isPhone", false);
+        Log.d("newis phone",String.valueOf(isPhone));
+        
         int index = getIntent().getIntExtra("index", 0);
         
         countryListSpinner = (Spinner) findViewById(R.id.CountryList);
@@ -83,7 +91,7 @@ public class VerifyPhoneNumber extends Activity {
                  
                  if(new NetworkAvailable(getApplicationContext()).haveNetworkConnection()){
                 	 if(isPhoneNumberValid){
-                		 AsyncTask<List<NameValuePair>, Void, String> Response = new SendData().execute(nameValuePairs);
+                		 AsyncTask<List<NameValuePair>, Void, String> Response = new SendData(VerifyPhoneNumber.this).execute(nameValuePairs);
                 		 Toast.makeText(getApplicationContext(), "available", Toast.LENGTH_SHORT).show();
                 	 }
                 	 else{
