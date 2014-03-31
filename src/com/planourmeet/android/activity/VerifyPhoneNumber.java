@@ -2,6 +2,7 @@ package com.planourmeet.android.activity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -9,6 +10,7 @@ import org.apache.http.message.BasicNameValuePair;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -33,12 +35,16 @@ public class VerifyPhoneNumber extends Activity {
 
 	public String phoneNo = null;
 	protected static final int SUB_ACTIVITY_REQUEST_CODE = 100;
+	protected static String Pin = null;
 	public Spinner countryListSpinner =null;
     public Spinner countryZipCodeSpinner= null;
     public GenerateRandomPin gp = null;
     public GetPhoneNumber getPhoneNumber= null;
     public TextView incorrectPhoneNumber = null;
     public SharedPreferences sp = null;
+    public Intent smsVerification = null;
+    boolean isPhone = false;
+    Editor edit =null;
     
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,8 +57,13 @@ public class VerifyPhoneNumber extends Activity {
         	Log.d("get phoneNumber", phoneNumber);
         }
         
+        
+        
         sp = PreferenceManager.getDefaultSharedPreferences(this);
-        boolean isPhone = sp.getBoolean("isPhone", false);
+        edit = sp.edit();
+        isPhone = sp.getBoolean("isPhone", false);
+        Pin = sp.getString("Pin",Pin);
+        
         Log.d("newis phone",String.valueOf(isPhone));
         
         int index = getIntent().getIntExtra("index", 0);
@@ -72,8 +83,7 @@ public class VerifyPhoneNumber extends Activity {
         Button ok = (Button) findViewById(R.id.RegistrationOk);
         ok.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-            	gp = new GenerateRandomPin();
-                String Pin = gp.generateRandomPin();
+            	
             	EditText phoneNumber = (EditText) findViewById(R.id.PhoneNumber);
             	phoneNo = phoneNumber.getText().toString();
             	
@@ -91,8 +101,25 @@ public class VerifyPhoneNumber extends Activity {
                  
                  if(new NetworkAvailable(getApplicationContext()).haveNetworkConnection()){
                 	 if(isPhoneNumberValid){
+                		 edit.putString("phoneNumber", phoneNo);
+                		 edit.commit();
                 		 AsyncTask<List<NameValuePair>, Void, String> Response = new SendData(VerifyPhoneNumber.this).execute(nameValuePairs);
                 		 Toast.makeText(getApplicationContext(), "available", Toast.LENGTH_SHORT).show();
+                		
+             
+                		 
+                		 try {
+                			String response = Response.get();
+                			Log.d("Async task response" , String.valueOf(Response.get()));
+							
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (ExecutionException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+                		 
                 	 }
                 	 else{
                 		 incorrectPhoneNumber = (TextView) findViewById(R.id.IncorrectPhoneNumber);

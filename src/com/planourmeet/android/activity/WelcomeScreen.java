@@ -11,6 +11,7 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.planourmeet.android.R;
+import com.planourmeet.android.helper.GenerateRandomPin;
 import com.planourmeet.android.helper.GetCountryCode;
 import com.planourmeet.android.helper.GetPhoneNumber;
 import com.planourmeet.android.helper.PhoneType;
@@ -21,6 +22,7 @@ public class WelcomeScreen extends Activity{
     private static int SPLASH_TIME_OUT = 2000;
     GetCountryCode getCountryCode = null;
     GetPhoneNumber getPhoneNumber = null;
+    GenerateRandomPin gp = null;
     Editor edit = null;
     TelephonyManager tm = null;
     SharedPreferences sp = null;
@@ -37,10 +39,15 @@ public class WelcomeScreen extends Activity{
         setContentView(R.layout.welcome_screen);
         //get wether the android device has phone functionality or not 
         boolean isPhone = new PhoneType(this).getPhoneType();
+        sp= PreferenceManager.getDefaultSharedPreferences(this);
+        
+        gp = new GenerateRandomPin();
+        String Pin = gp.generateRandomPin();
+        edit = sp.edit();
+        edit.putString("Pin", Pin);
         
         if(isPhone){
-        	sp= PreferenceManager.getDefaultSharedPreferences(this);
-        	edit = sp.edit();
+        	
         	edit.putBoolean("isPhone",true);
         }
         else{

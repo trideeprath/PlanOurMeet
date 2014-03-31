@@ -9,9 +9,13 @@
 	<string name="country">Your Country</string>
 	<string name="country_code_phone_number">Country code and phone number</string>
 	<string name="incorrectPhoneNumber">Please Check the phone number again, it should be 10 digit long</string>
+	<string name="incorrectPin">Please Check the pin number again , it should be 5 digit long</string>
 	<string name="country_india">India</string>
 	<string name="country_brazil">Brazil</string>
 	<string name="country_code_india">+91</string>
 	<string name="country_code_brazil">+55</string>
+	<string name="smsVerification">If the number is of the same device, sit back and relax!
+	    Please wait for some 15 seconds for sms to be sent to your phone </string>
+	<string name="EnterPin"> Enter the 5 digit pin sent via sms </string>
 	
 </resources>

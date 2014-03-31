@@ -16,12 +16,14 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.planourmeet.android.activity.SMSVerification;
 
 public class SendData  extends AsyncTask<List<NameValuePair>, Void, String>{
 
@@ -89,10 +91,15 @@ public class SendData  extends AsyncTask<List<NameValuePair>, Void, String>{
     protected void onPostExecute(String unused) {
         super.onPostExecute(unused);
         Log.d("result", unused);
+        progDailog.dismiss();
         if(unused.equals("Exception while sending")){
         	Toast.makeText(appContext,"Unable to connnect to internet , please retry" ,Toast.LENGTH_SHORT ).show();
         }
-        progDailog.dismiss();
+        else{
+        	Intent smsVerification = new Intent(appContext, SMSVerification.class);
+        	appContext.startActivity(smsVerification);
+        }
+       
     }
 	
 }
